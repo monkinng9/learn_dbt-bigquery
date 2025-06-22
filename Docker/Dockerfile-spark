@@ -1,0 +1,60 @@
+FROM apache/spark:3.5.4-scala2.12-java17-python3-r-ubuntu
+
+ENV AWS_SDK_VERSION=2.30.3
+ENV DELTA_LAKE_VERSION=3.3.2
+
+USER root
+
+# Download Iceberg and AWS dependencies
+RUN cd /opt/spark/jars && \
+    wget https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.29.26/bundle-2.29.26.jar && \
+    wget https://repo1.maven.org/maven2/io/delta/delta-storage/3.3.2/delta-storage-3.3.2.jar && \
+    wget https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.3.2/delta-spark_2.12-3.3.2.jar && \
+    wget https://repo1.maven.org/maven2/org/antlr/antlr4-runtime/4.13.2/antlr4-runtime-4.13.2.jar
+
+ENV SPARK_HOME=/opt/spark
+ENV PATH=$PATH:$SPARK_HOME/bin
+
+# Create Spark config directory and set default configurations
+RUN mkdir -p $SPARK_HOME/conf
+
+# Setup working directory
+WORKDIR /opt/spark/work-dir
+
+# Create directories for data and scripts
+RUN groupadd -g 1000 sparky && \
+    useradd -u 1000 -g 1000 -m -s /bin/bash sparky
+
+# Setup working directory
+WORKDIR /opt/spark/work-dir
+
+# Create directories for data and scripts
+RUN mkdir -p /opt/spark/work-dir/data \
+    /opt/spark/work-dir/scripts \
+    /opt/spark/work-dir/warehouse \
+    /opt/spark/work-dir/logs && \
+    chown -R sparky:sparky /opt/spark/work-dir
+
+# Copy and install Python requirements
+COPY requirements.txt /opt/spark/work-dir/
+RUN pip install uv
+RUN uv pip install --system -r /opt/spark/work-dir/requirements.txt
+
+# Install Graphviz and telnet
+RUN apt-get update && apt-get install -y graphviz telnet && apt-get clean
+
+
+# Set environment variables for data locations
+ENV WAREHOUSE_DIR=/opt/spark/work-dir/warehouse
+ENV DATA_DIR=/opt/spark/work-dir/data
+ENV SCRIPTS_DIR=/opt/spark/work-dir/scripts
+# ENV LOG_DIR=/opt/spark/work-dir/logs
+
+# Expose JupyterLab port
+EXPOSE 8888
+
+# Switch to non-root user
+USER sparky
+
+# Run JupyterLab
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser"]
