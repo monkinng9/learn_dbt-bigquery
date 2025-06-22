@@ -1,2 +1,6 @@
 z_note/*
 data/exists_data
+temp
+google-service-account.json
+profiles.yaml
+*.log
