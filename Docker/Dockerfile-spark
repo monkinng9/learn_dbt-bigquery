@@ -39,7 +39,7 @@ RUN pip install uv
 RUN uv pip install --system -r /opt/spark/work-dir/requirements.txt
 
 # Install Graphviz and telnet
-RUN apt-get update && apt-get install -y graphviz telnet && apt-get clean
+RUN apt-get update && apt-get install -y graphviz telnet git && apt-get clean
 
 
 # Set environment variables for data locations
