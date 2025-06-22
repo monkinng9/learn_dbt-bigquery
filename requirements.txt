@@ -1,0 +1,12 @@
+pandas==2.2.3
+clickhouse-connect==0.8.14
+pyspark==3.5.4
+pyarrow==17.0.0
+delta-spark==3.3.2
+pynessie==0.67.0
+ipython
+ibis-framework[polars,pyspark]
+graphviz
+jupyterlab
+dbt-core
+dbt-bigquery
