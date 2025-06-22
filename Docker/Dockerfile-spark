@@ -38,6 +38,9 @@ COPY requirements.txt /opt/spark/work-dir/
 RUN pip install uv
 RUN uv pip install --system -r /opt/spark/work-dir/requirements.txt
 
+# Copy profile.yml to Docker container
+COPY profiles.yaml /home/sparky/.dbt/profiles.yml
+
 # Install Graphviz and telnet
 RUN apt-get update && apt-get install -y graphviz telnet git && apt-get clean
 
