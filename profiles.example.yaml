@@ -1,0 +1,14 @@
+dbt_big_query_basic_v2:
+  outputs:
+    dev:
+      dataset: ecommerce_product_prize
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: xxxxxxxxxxxxxxxx
+      location: asia-southeast1
+      method: service-account
+      priority: interactive
+      project: xxxxxxxxxxxxxxxxx
+      threads: 4
+      type: bigquery
+  target: dev
