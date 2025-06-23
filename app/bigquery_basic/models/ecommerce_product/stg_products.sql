@@ -4,6 +4,7 @@
 ) }}
 
 SELECT
+    CAST(product_name_sha256 AS BYTES) AS product_name_sha256,
     product_name,
     sale_price,
     PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%S', ingest_timestamp_utc) AS ingest_timestamp_utc,
