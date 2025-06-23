@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: ecommerce_product # Choose a logical name for your source
+    database: personal-use-461616 # Your BigQuery project ID or default database
+    schema: demo_dbt_data_pipeline_beyondbegin   # Your BigQuery dataset name
+    tables:
+      - name: ecommerce_product
