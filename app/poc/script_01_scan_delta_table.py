@@ -1,5 +1,4 @@
 import polars as pl
-import pathlib
 
 table_path = "data/demo_data/processed/product_delta"
 
