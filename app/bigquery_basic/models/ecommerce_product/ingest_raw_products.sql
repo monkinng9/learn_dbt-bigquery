@@ -29,11 +29,13 @@ WITH source_data AS (
         {{ external_table_id }}
 )
 
-SELECT * FROM source_data
-
+SELECT
+    s.* 
+FROM 
+    source_data s
 {% if is_incremental() %}
-
-  -- filter for new records only
-  WHERE ingest_timestamp_utc > (SELECT MAX(ingest_timestamp_utc) FROM {{ this }})
-
+WHERE ingest_timestamp_utc > (SELECT MAX(ingest_timestamp_utc) FROM {{ this }})
+-- To handle cases where a product is updated multiple times in the same batch,
+-- we need to select only the latest version of each product.
+QUALIFY ROW_NUMBER() OVER (PARTITION BY product_name_sha256 ORDER BY ingest_timestamp_utc DESC) = 1
 {% endif %}
