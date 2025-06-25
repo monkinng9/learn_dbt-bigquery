@@ -11,20 +11,19 @@
 {{ config(
     materialized='incremental',
     alias='product_price_raw_data',
-    unique_key='product_name_sha256',
+    unique_key=['product_name_sha256','ecommerce_name'],
     pre_hook=[create_external_table_sql]
 ) }}
 
 WITH source_data AS (
     SELECT
         -- Generate SHA256 hash from the processed product_name
-        SHA256(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(product_name), r'\s*\([^)]*\)', ''), r'[^a-z0-9\s\p{Thai}+\-&]', ''))) AS product_name_sha256,
+        SHA256(TRIM(REGEXP_REPLACE(LOWER(product_name), r'[^a-z0-9\s\p{Thai}+\-&]', ''))) AS product_name_sha256,
         -- Process product_name:
         -- 1. Convert to lowercase
-        -- 2. Remove parenthetical phrases (often promotional)
-        -- 3. Remove special characters, preserving English, Thai, numbers, spaces, '+', '-', and '&'
-        -- 4. Trim whitespace
-        TRIM(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(product_name), r'\s*\([^)]*\)', ''), r'[^a-z0-9\s\p{Thai}+\-&]', '')) AS product_name,
+        -- 2. Remove special characters, preserving English, Thai, numbers, spaces, '+', '-', '&', and parentheses
+        -- 3. Trim whitespace
+        TRIM(REGEXP_REPLACE(LOWER(product_name), r'[^a-z0-9\s\p{Thai}+\-&()]', '')) AS product_name,
         sale_price,
         ecommerce_name,
         PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%S', ingest_timestamp_utc) AS ingest_timestamp_utc

@@ -10,11 +10,15 @@ sources:
 models:
   - name: product_price_raw_data
     description: "Raw product price data ingested from GCS. This model cleans, types, and de-duplicates the data from each batch."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - product_name_sha256
+            - ecommerce_name
     columns:
       - name: product_name_sha256
-        description: "SHA256 hash of the cleaned product name, used as a unique key."
+        description: "SHA256 hash of the cleaned product name."
         tests:
-          - unique
           - not_null
 
       - name: product_name
