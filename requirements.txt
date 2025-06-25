@@ -7,7 +7,7 @@ pynessie
 ipython
 polars
 polars-hash
-ibis-framework[polars,pyspark]
+ibis-framework[polars,pyspark,bigquery]
 graphviz
 jupyterlab
 dbt-core
