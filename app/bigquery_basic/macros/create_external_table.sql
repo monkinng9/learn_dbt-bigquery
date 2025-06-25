@@ -1,7 +1,6 @@
 {% macro create_external_table(external_table_id, gcs_path) %}
     {% set sql %}
-CREATE EXTERNAL TABLE {{ external_table_id }} (
-    product_name_sha256 STRING,
+CREATE OR REPLACE  EXTERNAL TABLE {{ external_table_id }} (
     product_name STRING,
     sale_price FLOAT64,
     ingest_timestamp_utc STRING,

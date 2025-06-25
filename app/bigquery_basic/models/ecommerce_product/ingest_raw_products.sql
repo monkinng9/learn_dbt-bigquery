@@ -17,15 +17,20 @@
 
 WITH source_data AS (
     SELECT
-        CAST(product_name_sha256 AS BYTES) AS product_name_sha256,
-        product_name,
+        -- Generate SHA256 hash from the processed product_name
+        SHA256(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(product_name), r'\s*\([^)]*\)', ''), r'[^a-z0-9\s\p{Thai}+\-&]', ''))) AS product_name_sha256,
+        -- Process product_name:
+        -- 1. Convert to lowercase
+        -- 2. Remove parenthetical phrases (often promotional)
+        -- 3. Remove special characters, preserving English, Thai, numbers, spaces, '+', '-', and '&'
+        -- 4. Trim whitespace
+        TRIM(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(product_name), r'\s*\([^)]*\)', ''), r'[^a-z0-9\s\p{Thai}+\-&]', '')) AS product_name,
         sale_price,
-        PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%S', ingest_timestamp_utc) AS ingest_timestamp_utc,
-        ecommerce_name
+        ecommerce_name,
+        PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%S', ingest_timestamp_utc) AS ingest_timestamp_utc
     FROM
         {{ external_table_id }}
 )
-
 SELECT
     s.* 
 FROM 

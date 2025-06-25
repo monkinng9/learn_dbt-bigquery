@@ -1,8 +1,44 @@
 version: 2
 
 sources:
-  - name: ecommerce_product # Choose a logical name for your source
-    database: personal-use-461616 # Your BigQuery project ID or default database
-    schema: demo_dbt_data_pipeline_beyondbegin   # Your BigQuery dataset name
+  - name: ecommerce_external
+    schema: ecommerce_product # This is the BigQuery dataset for the external table
     tables:
-      - name: ecommerce_product
+      - name: external_ingest_product
+        identifier: external_ingest_product_price # The table name in BigQuery
+
+models:
+  - name: product_price_raw_data
+    description: "Raw product price data ingested from GCS. This model cleans, types, and de-duplicates the data from each batch."
+    columns:
+      - name: product_name_sha256
+        description: "SHA256 hash of the cleaned product name, used as a unique key."
+        tests:
+          - unique
+          - not_null
+
+      - name: product_name
+        description: "Cleaned product name (lowercase, no special characters)."
+        tests:
+          - not_null
+
+      - name: sale_price
+        description: "The sale price of the product."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              # Set a reasonable max_value to catch outliers
+              max_value: 10000 
+      
+      - name: ecommerce_name
+        description: "The name of the ecommerce platform."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ecommerce_01','ecommerce_02']
+              
+      - name: ingest_timestamp_utc
+        description: "The timestamp when the data was ingested into the raw bucket."
+        tests:
+          - not_null
