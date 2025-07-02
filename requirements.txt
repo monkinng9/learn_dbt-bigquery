@@ -12,3 +12,7 @@ graphviz
 jupyterlab
 dbt-core
 dbt-bigquery
+python-dotenv
+chromadb
+openai
+google-genai
