@@ -6,3 +6,4 @@ profiles.yaml
 *.log
 .ipynb_checkpoints
 .env
+__pycache__
