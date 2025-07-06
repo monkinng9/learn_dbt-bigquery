@@ -18,16 +18,19 @@ models:
     columns:
       - name: product_name_sha256
         description: "SHA256 hash of the cleaned product name."
+        data_type: BYTES
         tests:
           - not_null
 
       - name: product_name
         description: "Cleaned product name (lowercase, no special characters)."
+        data_type: STRING
         tests:
           - not_null
 
       - name: sale_price
         description: "The sale price of the product."
+        data_type: FLOAT
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
@@ -37,6 +40,7 @@ models:
       
       - name: ecommerce_name
         description: "The name of the ecommerce platform."
+        data_type: STRING
         tests:
           - not_null
           - accepted_values:
@@ -44,5 +48,6 @@ models:
               
       - name: ingest_timestamp_utc
         description: "The timestamp when the data was ingested into the raw bucket."
+        data_type: TIMESTAMP
         tests:
           - not_null
