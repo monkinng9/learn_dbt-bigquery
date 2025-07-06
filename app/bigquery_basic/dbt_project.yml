@@ -30,7 +30,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   bigquery_basic:
     ecommerce_product:
-      +materialized: view
+      +materialized: table
 
 seeds:
   bigquery_basic:
