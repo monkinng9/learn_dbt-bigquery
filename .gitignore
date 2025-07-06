@@ -4,3 +4,6 @@ temp
 google-service-account.json
 profiles.yaml
 *.log
+.ipynb_checkpoints
+.env
+__pycache__

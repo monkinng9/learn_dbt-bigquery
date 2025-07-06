@@ -7,8 +7,13 @@ pynessie
 ipython
 polars
 polars-hash
-ibis-framework[polars,pyspark]
+ibis-framework[polars,pyspark,bigquery]
 graphviz
 jupyterlab
 dbt-core
 dbt-bigquery
+python-dotenv
+chromadb
+openai
+google-genai
+dbt-ibis
