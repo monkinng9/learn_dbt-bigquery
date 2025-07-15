@@ -34,10 +34,8 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path='/home/sparky/.dbt/.env')
 
 from openai import OpenAI
-import pickle
 import numpy as np
 import json
-import os
 import polars as pl
 import math
 
