@@ -12,7 +12,7 @@
     materialized='incremental',
     alias='product_price_raw_data',
     unique_key=['product_name_sha256','ecommerce_name'],
-    pre_hook=[create_external_table_sql]
+    pre_hook=[create_external_table_sql],
 ) }}
 
 WITH source_data AS (
